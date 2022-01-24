@@ -16,4 +16,15 @@ public class Map : MonoBehaviour
 
         return Chunks[chunkx, chunky].Tiles[tileX, tileY];
     }
+
+    public void SetElementAt(Vector2Int worldPos, BaseElement element)
+    {
+        int chunkx = worldPos.x / GameData.WorldSizeX;
+        int chunky = worldPos.y / GameData.WorldSizeY;
+
+        int tileX = worldPos.x - chunkx;
+        int tileY = worldPos.y - chunky;
+
+        Chunks[chunkx, chunky].Tiles[tileX, tileY] = element;
+    }
 }

@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public InputController Input;
+    public ElementController EC;
+
+    public Map Map;
+
+    private void Awake()
     {
-        
+        Input = GetComponent<InputController>();
+        EC = GetComponent<ElementController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        CreateMap();
+    }
+
+    void CreateMap()
+    {
+        Map = new Map();
     }
 }
