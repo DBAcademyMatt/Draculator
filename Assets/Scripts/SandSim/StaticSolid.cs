@@ -2,13 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "New Static Solid", menuName = "SandSim/Elements/Create New Static Solid")]
 public class StaticSolid : Solid
 {
-    public StaticSolid(string _name, Color _color)
-    {
-        Color = _color;
-    }
-
     public override void Die()
     {
         throw new System.NotImplementedException();
@@ -24,8 +20,9 @@ public class StaticSolid : Solid
         return Color;
     }
 
-    public override void Step()
+    public override Vector2Int Step(Vector2Int Position)
     {
-        throw new System.NotImplementedException();
+        //do nothing
+        return Position;
     }
 }

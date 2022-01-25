@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class ElementController : MonoBehaviour
 {
-    public List<BaseElement> Elements = new List<BaseElement>();
+    public static ElementController Instance;
+    public ElementCollection Elements;
 
     public int ElementIndex = 0;
 
+    public BaseElement CurrentElement { get { return Elements.Elements[ElementIndex]; } }
+
     private void Awake()
     {
-        CreateElements();
-    }
-
-    void CreateElements()
-    {
-        Elements.Add(new StaticSolid("Stone", Color.grey));
+        Instance = this;
     }
 }

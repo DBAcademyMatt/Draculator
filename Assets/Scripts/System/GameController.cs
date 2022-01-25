@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [HideInInspector]
     public InputController Input;
+    [HideInInspector]
     public ElementController EC;
 
     public Map Map;
@@ -22,6 +24,7 @@ public class GameController : MonoBehaviour
 
     void CreateMap()
     {
-        Map = new Map();
+        GameObject mapObj = new GameObject("Map");
+        Map = mapObj.AddComponent<Map>();
     }
 }
