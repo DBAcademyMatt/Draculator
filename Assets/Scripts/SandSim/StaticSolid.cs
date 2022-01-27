@@ -23,6 +23,6 @@ public class StaticSolid : Solid
     public override bool Step(Vector2Int Position)
     {
         //do nothing
-        return true; 
+        return false; 
     }
 }

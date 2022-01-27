@@ -37,13 +37,14 @@ public class Chunk
         RedrawChunk();
     }
 
+    int simCooldown = 0;
     public void SimulateChunk()
     {
      //   Debug.Log("Simulating Chunk " + ChunkPos, spriteObj);
         bool updatedThisFrame = false;
-        for (int x = 0; x < Tiles.GetLength(0); x++)
+        for (int y = 0; y < Tiles.GetLength(1); y++)
         {
-            for (int y = 0; y < Tiles.GetLength(1); y++)
+            for (int x = 0; x < Tiles.GetLength(0); x++)
             {
                 if (Tiles[x, y] != null && Tiles[x,y])
                 {
@@ -55,26 +56,36 @@ public class Chunk
                         updatedThisFrame = true;
                     }
 
-                    //if we are next to a chunk on any side, also simulate them.
-                    if (x == 0 && ChunkPos.x > 0)
-                        Map.Instance.Chunks[ChunkPos.x - 1, ChunkPos.y].Simulated = true;
+                    ////if we are next to a chunk on any side, also simulate them.
+                    //if (x == 0 && ChunkPos.x > 0)
+                    //    Map.Instance.Chunks[ChunkPos.x - 1, ChunkPos.y].Simulated = true;
 
-                    if (x == GameData.ChunkSize - 1 && ChunkPos.x < Map.Instance.Chunks.GetLength(0) - 1)
-                        Map.Instance.Chunks[ChunkPos.x + 1, ChunkPos.y].Simulated = true;
+                    //if (x == GameData.ChunkSize - 1 && ChunkPos.x < Map.Instance.Chunks.GetLength(0) - 1)
+                    //    Map.Instance.Chunks[ChunkPos.x + 1, ChunkPos.y].Simulated = true;
 
-                    if (y == 0 && ChunkPos.y > 0)
-                        Map.Instance.Chunks[ChunkPos.x, ChunkPos.y - 1].Simulated = true;
+                    //if (y == 0 && ChunkPos.y > 0)
+                    //    Map.Instance.Chunks[ChunkPos.x, ChunkPos.y - 1].Simulated = true;
 
-                    if (y == GameData.ChunkSize - 1 && ChunkPos.y < Map.Instance.Chunks.GetLength(1) - 1)
-                        Map.Instance.Chunks[ChunkPos.x, ChunkPos.y + 1].Simulated = true;
+                    //if (y == GameData.ChunkSize - 1 && ChunkPos.y < Map.Instance.Chunks.GetLength(1) - 1)
+                    //    Map.Instance.Chunks[ChunkPos.x, ChunkPos.y + 1].Simulated = true;
                 }
             }
         }
 
         RedrawChunk();
 
-        if (!updatedThisFrame)
-            Simulated = false;
+        if (updatedThisFrame)
+            simCooldown = 0;
+        else
+        {
+            //simCooldown++;
+            //if (simCooldown > GameData.SimulationSteps)
+            //{
+            //    simCooldown = 0;
+                Simulated = false;
+            //}
+        }
+        
 
         //debug outline
         Vector3 a = new Vector3(spriteObj.transform.position.x, spriteObj.transform.position.y, 0);

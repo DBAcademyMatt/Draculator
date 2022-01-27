@@ -9,6 +9,11 @@ public abstract class BaseElement : ScriptableObject
     [HideInInspector]
     public Color Color;
 
+    public int Bouyancy = 1;
+    public float Friction;
+    public float LinearDrag;
+    public float Bounciness;
+
     public float fireResistance;
     public bool OnFire;
 

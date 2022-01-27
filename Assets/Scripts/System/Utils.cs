@@ -11,9 +11,9 @@ public static class Utils
         if (start == end)
             return new Vector2Int[] { start };
 
+        //formula for a line.
         List<Vector2Int> Points = new List<Vector2Int>();
 
-        //formula for a line.
         int mX1 = start.x;
         int mY1 = start.y;
         int mX2 = end.x;

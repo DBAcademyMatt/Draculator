@@ -8,7 +8,7 @@ public class InputController : MonoBehaviour
 
     Vector2Int lastInputPos;
 
-    int Radius = 5;
+    int Radius = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -40,12 +40,15 @@ public class InputController : MonoBehaviour
             mousePos *= GameData.ChunkSize;
             Vector2Int pos = new Vector2Int((int)mousePos.x, (int)mousePos.y);
 
-            Vector2Int[] points = Utils.PointsInCircle(pos.x, pos.y, Radius);
+            Vector2Int[] points = Utils.PointsInCircle(pos.x, pos.y,2);// Radius);
             for (int i = 0; i < points.Length; i++)
             {
-                BaseElement element = Instantiate(ElementController.Instance.CurrentElement);
-                element.OnCreate();
-                Map.Instance.SetElementAt(points[i], element);
+                if (Map.Instance.GetElementAt(points[i]) == null)
+                {
+                    BaseElement element = Instantiate(ElementController.Instance.CurrentElement);
+                    element.OnCreate();
+                    Map.Instance.SetElementAt(points[i], element);
+                }
             }
         }
 

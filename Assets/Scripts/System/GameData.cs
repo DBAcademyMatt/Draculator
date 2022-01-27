@@ -4,10 +4,10 @@ using UnityEngine;
 
 public static class GameData
 {
-    public const int ChunkSize = 10;
+    public const int ChunkSize = 6;
 
-    public const int WorldSizeX = 10;
-    public const int WorldSizeY = 10;
+    public const int WorldSizeX = 16;
+    public const int WorldSizeY = 16;
 
-    public const float Gravity = 0.98f;
+    public const int SimulationSteps = 20; //no of steps a chunk takes before sleep
 }

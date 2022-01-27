@@ -5,111 +5,98 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Dynamic Solid", menuName = "SandSim/Elements/Create New Dynamic Solid")]
 public class DynamicSolid : Solid
 {
-    public float Friction;
-    public float LinearDrag;
-    public float Bounciness;
-
-    float LinearBounce = 0.25f;
-
     bool FreeFalling; // bool flag to handle free falling blocks different from physically simulated blocks.
+
+    public override void OnCreate()
+    {
+        FreeFalling = true;
+        Velocity = Random.insideUnitCircle * 3;
+        base.OnCreate();
+    }
 
     public override bool Step(Vector2Int Position)
     {
-        bool updatedThisFrame = false;
+        Velocity += Map.Instance.Gravity;// * Time.deltaTime;
 
-        
+        Vector2Int VelInt = new Vector2Int(Mathf.RoundToInt(Velocity.x), Mathf.RoundToInt(Velocity.y));
+        Vector2Int[] move = Utils.PointsOnLine(Position, Position + VelInt);
+        Vector2Int lastPos = move[0];
 
-        // is there anything immediately below us and we are not free falling?
-        Vector2Int oneDown = Position + Vector2Int.down;
-        Vector2Int oneDownLeft = oneDown + Vector2Int.left;
-        Vector2Int oneDownRight = oneDown + Vector2Int.right;
-
-        if (FreeFalling)
+        bool updated = false;
+        for (int i = 0; i < move.GetLength(0); i++)
         {
-            updatedThisFrame = true;
-            Velocity.y -= GameData.Gravity * Time.deltaTime;
-        }
-        else
-        {
-            Vector2Int[] tests = new Vector2Int[3];
-            tests[0] = oneDown;
-            if (Random.Range(0, 2) == 0)
+            if (ActOnElement(lastPos, move[i]))
             {
-                tests[1] = oneDownLeft;
-                tests[2] = oneDownRight;
+                lastPos = move[i];
+                updated = true;
+            }
+            //else
+            //    FreeFalling = false;
+        }
+
+        //ApplyHeatToSurroundings();
+
+        return updated;
+    }
+
+    bool ActOnElement(Vector2Int thisPos, Vector2Int theirPos)
+    {
+        //falling, but velocity is not great enough to increment a block 
+        //sampling our current position
+        if (thisPos == theirPos && FreeFalling)
+            return true;
+
+        BaseElement target = Map.Instance.GetElementAt(theirPos);
+        bool insideMap = Map.Instance.IsWithinBounds(theirPos);
+
+        //Element at the test position can be passed through - Empty, Liquid or Gas
+        if (insideMap)
+        {
+            if (target == null)
+            {
+                Map.Instance.SetElementAt(theirPos, this);
+                Map.Instance.SetElementAt(thisPos, target);
+                return true;
             }
             else
             {
-                tests[1] = oneDownRight;
-                tests[2] = oneDownLeft;
-            }
-
-            for (int i = 0; i < tests.Length; i++)
-            {
-                if (Map.Instance.IsWithinBounds(tests[i]))
+                if (insideMap && (target.GetType() == typeof(Gas)
+                    || target.GetType() == typeof(Liquid)))
                 {
-                    BaseElement element = Map.Instance.GetElementAt(tests[i]);
-                    if (element == null)
-                    {
-                        updatedThisFrame = true;
-                        FreeFalling = true;
-                        Velocity.y = -1;
-                        Velocity.x = (tests[i].x - Position.x) * LinearBounce;
-                        break;
-                    }
+                    Map.Instance.SetElementAt(theirPos, this);
+                    Map.Instance.SetElementAt(thisPos, target);
+                    return true;
                 }
+                else if (target.GetType() == typeof(Solid))
+                {
+                    if (FreeFalling)
+                    {
+                        //convent the current velocity into a tangent using direction as the normal and apply to a side.
+                        Vector3 crossSide = Vector3.forward;
+                        if (Random.Range(0, 2) == 0)
+                            crossSide = Vector3.back;
+                        Vector3 cross = Vector3.Cross(Velocity.normalized, crossSide);
+                        Velocity = cross * Velocity.magnitude;
+
+                        //apply our velocity to other dynamic solids
+                        if (target != null && target.GetType() == typeof(DynamicSolid))
+                            target.Velocity = Velocity;
+                    }
+
+                    return true;
+                }
+
+                Velocity *= Friction * target.Friction;
             }
         }
 
-        // check along the velocity
-        Vector2Int VelInt = new Vector2Int(Mathf.RoundToInt(Velocity.x), Mathf.RoundToInt(Velocity.y));
-        Vector2Int[] move = Utils.PointsOnLine(Position, Position + VelInt);
-        Vector2Int lastPos = move[0]; // or Position
+        FreeFalling = false;
 
-        for (int i = 1; i < move.GetLength(0); i++)
-        {
-            if (Map.Instance.IsWithinBounds(move[i]))
-            {
-                //updatedThisFrame = true;
-                FreeFalling = false;
-
-                BaseElement element = Map.Instance.GetElementAt(move[i]);
-                if (element != null)
-                {
-                    if (element.GetType() == typeof(Liquid) || element.GetType() == typeof(Gas))
-                    {  
-                        //swap places.
-                        Map.Instance.SetElementAt(move[i], this);
-                        Map.Instance.SetElementAt(lastPos, element);
-                    }
-                    else
-                    {
-                        //stop here.
-                        Map.Instance.SetElementAt(lastPos, this);
-                        Velocity = Vector2Int.zero;
-                        break;
-                    }
-                }
-                else
-                {
-                    Map.Instance.SetElementAt(lastPos, null);
-                    Map.Instance.SetElementAt(move[i], this);
-                    lastPos = move[i];
-                }
-            }
-        }
-
-        Velocity.x *= LinearDrag;
-
-        if (!updatedThisFrame)
-            Velocity = Vector2.zero;
-
-        return updatedThisFrame;
+        return false;
     }
 
     public override Color GetColor()
     {
-
         return Color;
     }
 

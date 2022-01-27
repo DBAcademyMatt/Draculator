@@ -8,6 +8,8 @@ public class Map : MonoBehaviour
     public Chunk[,] Chunks = new Chunk[GameData.WorldSizeX, GameData.WorldSizeY];
     public Vector2Int Offset = Vector2Int.zero;
 
+    public Vector2 Gravity = new Vector2(0, -0.98f);
+
     private void Start()
     {
         Instance = this;
@@ -34,6 +36,17 @@ public class Map : MonoBehaviour
         }
     }
 
+    public Chunk GetChunkAt(Vector2Int worldPos)
+    {
+        int chunkx = worldPos.x / GameData.ChunkSize;
+        int chunky = worldPos.y / GameData.ChunkSize;
+
+        if (!IsWithinBounds(worldPos))
+            return null;
+
+        return Chunks[chunkx, chunky];
+    }
+
     public BaseElement GetElementAt(Vector2Int worldPos)
     {
         int chunkx = worldPos.x / GameData.ChunkSize;
@@ -55,6 +68,15 @@ public class Map : MonoBehaviour
 
         int tileX = worldPos.x % GameData.ChunkSize;
         int tileY = worldPos.y % GameData.ChunkSize;
+
+        //if (element != null)
+        //{
+        //    Debug.Log("Set Element At " + worldPos + "   - " + element.GetType());
+        //}
+        //else
+        //{
+        //    Debug.Log("Unset Element At " + worldPos);
+        //}
 
         if (IsWithinBounds(worldPos))
         {
