@@ -20,7 +20,7 @@ public class Map : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         for(int x = 0; x < Chunks.GetLength(0); x++)
         {

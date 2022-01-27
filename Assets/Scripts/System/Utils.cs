@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public static class Utils
 {
@@ -53,6 +54,19 @@ public static class Utils
 
             Points.Add(new Vector2Int(x, y));
         }
+
+        return Points.ToArray();
+    }
+
+    public static Vector2Int[] PointsInCircle(int x, int y, int radius = 3)
+    {
+        List<Vector2Int> Points = new List<Vector2Int>();
+        float rSquared = radius * radius;
+
+        for (int u = x - radius; u < x + radius + 1; u++)
+            for (int v = y - radius; v < y + radius + 1; v++)
+                if ((x - u) * (x - u) + (y - v) * (y - v) < rSquared)
+                    Points.Add(new Vector2Int(u, v));
 
         return Points.ToArray();
     }

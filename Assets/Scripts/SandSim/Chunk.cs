@@ -39,6 +39,7 @@ public class Chunk
 
     public void SimulateChunk()
     {
+     //   Debug.Log("Simulating Chunk " + ChunkPos, spriteObj);
         bool updatedThisFrame = false;
         for (int x = 0; x < Tiles.GetLength(0); x++)
         {
@@ -49,11 +50,8 @@ public class Chunk
                     Vector2Int lastPos = new Vector2Int(ChunkPos.x * GameData.ChunkSize + x, 
                                                         ChunkPos.y * GameData.ChunkSize + y);
 
-                    Vector2Int newPos = Tiles[x, y].Step(lastPos);
-                    if (newPos != lastPos)
+                    if (Tiles[x, y].Step(lastPos))
                     {
-                        Map.Instance.SetElementAt(newPos, Tiles[x, y]);
-                        Map.Instance.SetElementAt(lastPos, null);
                         updatedThisFrame = true;
                     }
 
@@ -61,7 +59,7 @@ public class Chunk
                     if (x == 0 && ChunkPos.x > 0)
                         Map.Instance.Chunks[ChunkPos.x - 1, ChunkPos.y].Simulated = true;
 
-                    if (x == GameData.ChunkSize - 1 && ChunkPos.y < Map.Instance.Chunks.GetLength(0) - 1)
+                    if (x == GameData.ChunkSize - 1 && ChunkPos.x < Map.Instance.Chunks.GetLength(0) - 1)
                         Map.Instance.Chunks[ChunkPos.x + 1, ChunkPos.y].Simulated = true;
 
                     if (y == 0 && ChunkPos.y > 0)
@@ -91,7 +89,6 @@ public class Chunk
     {
         for (int y = 0; y < Tiles.GetLength(1); y++)
         {
-            Debug.Log("Redraw Y : " + y);
             for (int x = 0; x < Tiles.GetLength(0); x++)
             {
                 Color c = Color.black;// Random.ColorHSV();

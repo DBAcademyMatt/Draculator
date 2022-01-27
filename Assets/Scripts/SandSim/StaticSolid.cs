@@ -20,9 +20,9 @@ public class StaticSolid : Solid
         return Color;
     }
 
-    public override Vector2Int Step(Vector2Int Position)
+    public override bool Step(Vector2Int Position)
     {
         //do nothing
-        return Position;
+        return true; 
     }
 }

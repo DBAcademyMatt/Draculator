@@ -8,6 +8,8 @@ public class InputController : MonoBehaviour
 
     Vector2Int lastInputPos;
 
+    int Radius = 5;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,16 +24,12 @@ public class InputController : MonoBehaviour
             gc.EC.ElementIndex++;
             if (gc.EC.ElementIndex >= gc.EC.Elements.Elements.Count)
                 gc.EC.ElementIndex = 0;
-
-            Debug.Log("Element Index : " + ElementController.Instance.ElementIndex);
         }
         else if (Input.mouseScrollDelta.y < 0)
         {
             gc.EC.ElementIndex--;
             if (gc.EC.ElementIndex < 0)
                 gc.EC.ElementIndex = gc.EC.Elements.Elements.Count - 1;
-
-            Debug.Log("Element Index : " + ElementController.Instance.ElementIndex);
         }
 
         if (Input.GetMouseButton(0))
@@ -41,12 +39,14 @@ public class InputController : MonoBehaviour
             mousePos.z = 0;
             mousePos *= GameData.ChunkSize;
             Vector2Int pos = new Vector2Int((int)mousePos.x, (int)mousePos.y);
-            //Vector2Int worldPos = new Vector2Int((int)Camera.main.transform.position.x, (int)Camera.main.transform.position.y) + pos;
 
-            Debug.Log("World Pos : " + pos + "     mouse Pos : " + mousePos + "    Input Pos: " + Input.mousePosition);
-            BaseElement element = Instantiate(ElementController.Instance.CurrentElement);
-            element.OnCreate();
-            Map.Instance.SetElementAt(pos, element);
+            Vector2Int[] points = Utils.PointsInCircle(pos.x, pos.y, Radius);
+            for (int i = 0; i < points.Length; i++)
+            {
+                BaseElement element = Instantiate(ElementController.Instance.CurrentElement);
+                element.OnCreate();
+                Map.Instance.SetElementAt(points[i], element);
+            }
         }
 
         if (Input.GetMouseButton(2))

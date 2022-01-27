@@ -15,7 +15,7 @@ public abstract class BaseElement : ScriptableObject
     [HideInInspector]
     public Vector2 Velocity;
 
-    public abstract Vector2Int Step(Vector2Int Position);
+    public abstract bool Step(Vector2Int Position);
     public abstract void OnCreate();
     public abstract void Die();
     public abstract void DieAndReplace(BaseElement element);

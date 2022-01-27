@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Concrete : StaticSolid
 {
-    public override Vector2Int Step(Vector2Int Position)
+    public override bool Step(Vector2Int Position)
     {
-
         return base.Step(Position);
     }
 
