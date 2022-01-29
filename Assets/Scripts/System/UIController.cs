@@ -7,8 +7,14 @@ public class UIController : MonoBehaviour
 {
     public Image ElementImage;
 
+    public static UIController Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public void SetElementImage(BaseElement element)
     {
-        ElementImage.color = element.GetColor();
+        ElementImage.color = element.ColourRange.Evaluate(Random.value);
     }
 }

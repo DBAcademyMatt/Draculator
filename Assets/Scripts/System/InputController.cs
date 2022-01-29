@@ -24,15 +24,19 @@ public class InputController : MonoBehaviour
             gc.EC.ElementIndex++;
             if (gc.EC.ElementIndex >= gc.EC.Elements.Elements.Count)
                 gc.EC.ElementIndex = 0;
+
+            UIController.Instance.SetElementImage(ElementController.Instance.CurrentElement);
         }
         else if (Input.mouseScrollDelta.y < 0)
         {
             gc.EC.ElementIndex--;
             if (gc.EC.ElementIndex < 0)
                 gc.EC.ElementIndex = gc.EC.Elements.Elements.Count - 1;
+
+            UIController.Instance.SetElementImage(ElementController.Instance.CurrentElement);
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(1))
         {
             //get world position of click to the pixel.
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);// / Camera.main.orthographicSize / 2;// Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -40,7 +44,7 @@ public class InputController : MonoBehaviour
             mousePos *= GameData.ChunkSize;
             Vector2Int pos = new Vector2Int((int)mousePos.x, (int)mousePos.y);
 
-            Vector2Int[] points = Utils.PointsInCircle(pos.x, pos.y,2);// Radius);
+            Vector2Int[] points = Utils.PointsInCircle(pos.x, pos.y, 3);// Radius);
             for (int i = 0; i < points.Length; i++)
             {
                 if (Map.Instance.GetElementAt(points[i]) == null)

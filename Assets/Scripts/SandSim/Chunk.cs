@@ -9,6 +9,7 @@ public class Chunk
     SpriteRenderer sr;
     public Texture2D Tex;
     public bool Simulated; // only simulated when a tile moves into or next to chunk.
+    public bool NeedsDrawn; // has this been updated somehow and needs redrawn?
 
     public BaseElement[,] Tiles = new BaseElement[GameData.ChunkSize, GameData.ChunkSize];
 
@@ -37,10 +38,11 @@ public class Chunk
         RedrawChunk();
     }
 
-    int simCooldown = 0;
+
     public void SimulateChunk()
     {
-     //   Debug.Log("Simulating Chunk " + ChunkPos, spriteObj);
+        NeedsDrawn = true;
+
         bool updatedThisFrame = false;
         for (int y = 0; y < Tiles.GetLength(1); y++)
         {
@@ -48,45 +50,20 @@ public class Chunk
             {
                 if (Tiles[x, y] != null && Tiles[x,y])
                 {
-                    Vector2Int lastPos = new Vector2Int(ChunkPos.x * GameData.ChunkSize + x, 
+                    Vector2Int pos = new Vector2Int(ChunkPos.x * GameData.ChunkSize + x, 
                                                         ChunkPos.y * GameData.ChunkSize + y);
 
-                    if (Tiles[x, y].Step(lastPos))
+                    if (Tiles[x, y].Tick(pos))
                     {
                         updatedThisFrame = true;
                     }
-
-                    ////if we are next to a chunk on any side, also simulate them.
-                    //if (x == 0 && ChunkPos.x > 0)
-                    //    Map.Instance.Chunks[ChunkPos.x - 1, ChunkPos.y].Simulated = true;
-
-                    //if (x == GameData.ChunkSize - 1 && ChunkPos.x < Map.Instance.Chunks.GetLength(0) - 1)
-                    //    Map.Instance.Chunks[ChunkPos.x + 1, ChunkPos.y].Simulated = true;
-
-                    //if (y == 0 && ChunkPos.y > 0)
-                    //    Map.Instance.Chunks[ChunkPos.x, ChunkPos.y - 1].Simulated = true;
-
-                    //if (y == GameData.ChunkSize - 1 && ChunkPos.y < Map.Instance.Chunks.GetLength(1) - 1)
-                    //    Map.Instance.Chunks[ChunkPos.x, ChunkPos.y + 1].Simulated = true;
                 }
             }
         }
 
-        RedrawChunk();
-
-        if (updatedThisFrame)
-            simCooldown = 0;
-        else
-        {
-            //simCooldown++;
-            //if (simCooldown > GameData.SimulationSteps)
-            //{
-            //    simCooldown = 0;
-                Simulated = false;
-            //}
-        }
+        if (!updatedThisFrame)
+            Simulated = false;
         
-
         //debug outline
         Vector3 a = new Vector3(spriteObj.transform.position.x, spriteObj.transform.position.y, 0);
         Vector3 b = a + new Vector3(1, 1, 0);
@@ -96,7 +73,8 @@ public class Chunk
         Debug.DrawLine(b, b - new Vector3(0, 1, 0), Color.cyan);
     }
 
-    void RedrawChunk()
+
+    public void RedrawChunk()
     {
         for (int y = 0; y < Tiles.GetLength(1); y++)
         {
@@ -105,6 +83,7 @@ public class Chunk
                 Color c = Color.black;// Random.ColorHSV();
                 if (Tiles[x, y] != null)
                 {
+                    Tiles[x, y].AlreadyUpdated = false;
                     c = Tiles[x, y].Color;
                 }
 
@@ -113,5 +92,7 @@ public class Chunk
         }
         Tex.Apply();
         sr.sprite = Sprite.Create(Tex, new Rect(0, 0, GameData.ChunkSize, GameData.ChunkSize), Vector2.zero, GameData.ChunkSize);
+
+        NeedsDrawn = false;
     }
 }

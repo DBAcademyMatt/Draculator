@@ -10,9 +10,11 @@ public abstract class BaseElement : ScriptableObject
     public Color Color;
 
     public int Bouyancy = 1;
+    //public float InertialResistance = 0.1f;
     public float Friction;
     public float LinearDrag;
     public float Bounciness;
+    public float Mass;
 
     public float fireResistance;
     public bool OnFire;
@@ -20,12 +22,13 @@ public abstract class BaseElement : ScriptableObject
     [HideInInspector]
     public Vector2 Velocity;
 
-    public abstract bool Step(Vector2Int Position);
+    public abstract bool Tick(Vector2Int Position);
     public abstract void OnCreate();
     public abstract void Die();
     public abstract void DieAndReplace(BaseElement element);
-    public abstract Color GetColor();
     //public abstract bool ReceiveHeat(float heat);
+
+    public bool AlreadyUpdated = false;
 
     public virtual bool ReceiveHeat(float heat)
     {

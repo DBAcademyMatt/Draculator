@@ -8,7 +8,7 @@ public class Map : MonoBehaviour
     public Chunk[,] Chunks = new Chunk[GameData.WorldSizeX, GameData.WorldSizeY];
     public Vector2Int Offset = Vector2Int.zero;
 
-    public Vector2 Gravity = new Vector2(0, -0.98f);
+    public Vector2 Gravity = new Vector2(0, -9.8f);
 
     private void Start()
     {
@@ -22,7 +22,7 @@ public class Map : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         for(int x = 0; x < Chunks.GetLength(0); x++)
         {
@@ -32,6 +32,15 @@ public class Map : MonoBehaviour
                 {
                     Chunks[x, y].SimulateChunk();
                 }
+            }
+        }
+
+        for (int x = 0; x < Chunks.GetLength(0); x++)
+        {
+            for (int y = 0; y < Chunks.GetLength(1); y++)
+            {
+                if (Chunks[x, y].NeedsDrawn)
+                    Chunks[x, y].RedrawChunk();
             }
         }
     }
@@ -69,19 +78,11 @@ public class Map : MonoBehaviour
         int tileX = worldPos.x % GameData.ChunkSize;
         int tileY = worldPos.y % GameData.ChunkSize;
 
-        //if (element != null)
-        //{
-        //    Debug.Log("Set Element At " + worldPos + "   - " + element.GetType());
-        //}
-        //else
-        //{
-        //    Debug.Log("Unset Element At " + worldPos);
-        //}
-
         if (IsWithinBounds(worldPos))
         {
             Chunks[chunkx, chunky].Tiles[tileX, tileY] = element;
             Chunks[chunkx, chunky].Simulated = true;
+            Chunks[chunkx, chunky].NeedsDrawn = true;
         }
     }
 

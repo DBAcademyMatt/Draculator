@@ -42,6 +42,13 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   Color: {r: 0, g: 0, b: 0, a: 0}
+  Bouyancy: 1
+  Friction: 0.5
+  LinearDrag: 0.9
+  Bounciness: 0.15
+  Mass: 1
   fireResistance: 0
   OnFire: 0
   Velocity: {x: 0, y: 0}
+  AlreadyUpdated: 0
+  FreeFalling: 0

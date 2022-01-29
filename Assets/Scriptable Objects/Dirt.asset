@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51c146d8a6cf72b46b2114aca38613fc, type: 3}
-  m_Name: Concrete
+  m_Script: {fileID: 11500000, guid: 601b35fe3f0254b4b8a502540a823ad4, type: 3}
+  m_Name: Dirt
   m_EditorClassIdentifier: 
   ColourRange:
     serializedVersion: 2
-    key0: {r: 1, g: 0, b: 0.7017374, a: 1}
-    key1: {r: 0.050236296, g: 0.02352941, b: 1, a: 1}
+    key0: {r: 0.5754717, g: 0.32272348, b: 0.18729976, a: 1}
+    key1: {r: 0.3018868, g: 0.2392873, b: 0.21217516, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -44,9 +44,11 @@ MonoBehaviour:
   Color: {r: 0, g: 0, b: 0, a: 0}
   Bouyancy: 1
   Friction: 0
-  LinearDrag: 0
-  Bounciness: 0
+  LinearDrag: 0.6
+  Bounciness: 0.3
+  Mass: 3
   fireResistance: 0
   OnFire: 0
   Velocity: {x: 0, y: 0}
   AlreadyUpdated: 0
+  FreeFalling: 0
