@@ -44,11 +44,11 @@ MonoBehaviour:
   Color: {r: 0, g: 0, b: 0, a: 0}
   Bouyancy: 1
   Friction: 0
-  LinearDrag: 0.35
-  Bounciness: 0.7
+  LinearDrag: 0.8
+  Bounciness: 0.8
   Mass: 5
   fireResistance: 0
   OnFire: 0
   Velocity: {x: 0, y: 0}
   AlreadyUpdated: 0
-  FreeFalling: 0
+  Resting: 0

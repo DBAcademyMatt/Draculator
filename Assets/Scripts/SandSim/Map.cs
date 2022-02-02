@@ -8,7 +8,7 @@ public class Map : MonoBehaviour
     public Chunk[,] Chunks = new Chunk[GameData.WorldSizeX, GameData.WorldSizeY];
     public Vector2Int Offset = Vector2Int.zero;
 
-    public Vector2 Gravity = new Vector2(0, -9.8f);
+    public Vector2 Gravity = new Vector2(0, -0.98f);
 
     private void Start()
     {
@@ -22,7 +22,7 @@ public class Map : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         for(int x = 0; x < Chunks.GetLength(0); x++)
         {
@@ -103,5 +103,38 @@ public class Map : MonoBehaviour
         }
 
         return true;
+    }
+
+    public bool IsSolid(Vector2Int pos)
+    {
+        int chunkx = pos.x / GameData.ChunkSize;
+        int chunky = pos.y / GameData.ChunkSize;
+
+        int tileX = pos.x % GameData.ChunkSize;
+        int tileY = pos.y % GameData.ChunkSize;
+
+        if (chunkx < 0
+            || chunky < 0
+            || chunkx >= GameData.WorldSizeX
+            || chunky >= GameData.WorldSizeY
+            || tileX < 0
+            || tileY < 0
+            || tileX >= GameData.ChunkSize * GameData.WorldSizeX
+            || tileY >= GameData.ChunkSize * GameData.WorldSizeY)
+        {
+            return true;
+        }
+        else
+        { 
+            BaseElement element = Chunks[chunkx, chunky].Tiles[tileX, tileY];
+            if (element != null
+                && (element.GetType() == typeof(DynamicSolid)
+                || element.GetType() == typeof(StaticSolid)))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

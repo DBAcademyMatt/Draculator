@@ -44,7 +44,7 @@ public class InputController : MonoBehaviour
             mousePos *= GameData.ChunkSize;
             Vector2Int pos = new Vector2Int((int)mousePos.x, (int)mousePos.y);
 
-            Vector2Int[] points = Utils.PointsInCircle(pos.x, pos.y, 3);// Radius);
+            Vector2Int[] points = Utils.PointsInCircle(pos.x, pos.y, 1);// Radius);
             for (int i = 0; i < points.Length; i++)
             {
                 if (Map.Instance.GetElementAt(points[i]) == null)
